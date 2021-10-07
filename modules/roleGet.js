@@ -3,7 +3,7 @@ module.exports = {
         let channel, message;
         bot.on('ready', async () => {
             channel = await bot.channels.fetch("895608968871829525");
-            message = await channel.messages.fetch("895708551576711208");
+            message = await channel.messages.fetch("895710707973255218");
         });
         
         bot.on('messageReactionAdd', async (m, u) => {
