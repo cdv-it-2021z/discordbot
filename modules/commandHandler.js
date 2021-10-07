@@ -9,7 +9,7 @@ module.exports = {
             try {
                 await command.execute(i);
             } catch (e) { 
-                console.error(e);
+                console.error(`Error while executing ${i.commandName}`, e);
             }
         })
     }
