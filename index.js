@@ -17,7 +17,7 @@ const bot = new Client(
     });
 
 const commands = {};
-const commandFiles = fs.readdirSync('./cmds').filter(f => f.endsWith('.js'));
+const commandFiles = readdirSync('./cmds').filter(f => f.endsWith('.js'));
 
 for (const file of commandFiles) {
     const command = require(`./cmds/${file}`);
@@ -29,7 +29,7 @@ for (const file of commandFiles) {
 }
 
 
-const modules = fs.readdirSync('./modules')
+const modules = readdirSync('./modules')
     .filter(f => f.endsWith('.js'))
     .forEach(f => require(`./modules/${f}`).execute({bot, commands}));
 
