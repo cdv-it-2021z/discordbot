@@ -1,5 +1,9 @@
 name: Tests CI
 on: [push, pull_request]
+  paths:
+  - 'tests/**'
+  - 'cmds/**'
+  - 'modules/**'
 
 jobs:
   test:
@@ -9,7 +13,7 @@ jobs:
       - name: Test using Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
       - run: npm install
       - run: npm test
       - name: Tests ✅
