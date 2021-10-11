@@ -1,5 +1,6 @@
+!process.env.DISCORD_TOKEN && require('dotenv').config();
 const { Client, Intents } = require('discord.js');
-const fs = require('fs');
+const { readdirSync } = require('fs');
 
 const bot = new Client(
     {
