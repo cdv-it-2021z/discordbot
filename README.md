@@ -55,12 +55,27 @@ module.exports = {
 }
 ```
 
+lub za pomocą TypeScript:
+```ts
+import { Permissions } from "discord.js";
+import { Command } from "../Interfaces";
+
+export const command: Command = {
+    name: "ping",
+    description: "Will pong back",
+    permission: Permissions.FLAGS.ADMINISTRATOR,
+    run: async({ message }) => {
+        message.reply(`pong!`);
+    }
+}
+```
+
 `data` musi zawierać obiekt typu `SlashCommandBuilder()` z przynajmniej ustawioną  
 nazwą: `.setName("nazwa")`,   
 opisem: `.setDescription("twój opis")`,  
 i początkowym stanem permissi: `.setDefaultPermission(boolean)`.
 
-Funkcja `execute()` może przyjmować argument [`interaction`](https://discord.js.org/#/docs/main/13.2.0/class/Interaction), lub w skrócie `i`, który jest obiektem interakcji dostarczonym prosto z eventu [`interactionCreate`](https://discord.js.org/#/docs/main/13.2.0/class/Client?scrollTo=e-interactionCreate).
+Funkcja `execute()` może przyjmować argument [`interaction`](discord.js.org/#/docs/main/13.2.0/class/CommandInteraction), lub w skrócie `i`, który jest obiektem interakcji dostarczonym prosto z eventu [`interactionCreate`](https://discord.js.org/#/docs/main/13.2.0/class/Client?scrollTo=e-interactionCreate).
 
 ## Testowanie komendy
 
