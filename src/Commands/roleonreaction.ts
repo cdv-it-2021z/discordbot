@@ -34,7 +34,7 @@ export const command: Command = {
     run: async({ client, message }) => {
         if( message?.options?.data?.length == 4 ) {
             const channel = message.options.getChannel("kanał");
-            const msgLink = message.options.getString("link");
+            const msgLink = message.options.getString("msg_id");
             const emoji = message.options.getString("emoji");
             const role = message.options.getRole("rola");
 

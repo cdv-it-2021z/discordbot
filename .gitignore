@@ -3,6 +3,7 @@
 node_modules/
 package-lock.json
 
+./src/Data/*.json
 
 .env
 env.sh
