@@ -4,7 +4,7 @@ import { Command, Listener } from "../Interfaces";
 export const command: Command = {
     name: "roleonreaction",
     description: "Ustawia reakcję na danej wiadomości i daję/zabiera role po reakcji.",
-    permission: Permissions.FLAGS.KICK_MEMBERS,
+    permission: Permissions.FLAGS.MANAGE_ROLES,
     options: [
         {
             type: "CHANNEL",
@@ -38,14 +38,15 @@ export const command: Command = {
             const emoji = message.options.getString("emoji");
             const role = message.options.getRole("rola");
 
-            const fetchedChannel = await message.guild.channels.fetch(channel.id) as TextChannel;
-            const fetchedMessage = await fetchedChannel.messages.fetch(msgLink);
-
-            if( !fetchedChannel || !fetchedMessage ) 
-                return message.reply("Błędny kanał/wiadomość!");
+            const fetchedChannel =  client.Channels.get( channel.id ) || await message.guild.channels.fetch( channel.id ) as TextChannel;
+            if( !fetchedChannel )
+                return message.reply("Nie znaleziono kanału!");
             
+            const fetchedMessage = client.Messages.get( msgLink ) || await fetchedChannel.messages.fetch( msgLink );
+            if( !fetchedMessage ) 
+                return message.reply("Nie znaleziono wiadomości!");
 
-            const reacted = await fetchedMessage.react(emoji);
+            const reacted = await fetchedMessage.react( emoji );
             if( !reacted?.count ) 
                 return message.reply("Nie można było zareagować na wiadomość!");
             
@@ -62,7 +63,7 @@ export const command: Command = {
                 return message.reply(`Taki listener jest już na tej wiadomości! Daje: ${isadded.role}`);
             
 
-            client.reactionListeners.push(item);
+            client.reactionListeners.push( item );
             client.saveReactListeners();
 
             message.reply(`Zapisano listener na kanale: <#${channel.id}> emotka: ${emoji} daje rolę ${role.name}!`);
