@@ -66,7 +66,7 @@ export const command: Command = {
             client.reactionListeners.push( item );
             client.saveReactListeners();
 
-            message.reply(`Zapisano listener na kanale: <#${channel.id}> emotka: ${emoji} daje rolę ${role.name}!`);
+            message.reply(`Zapisano listener na kanale: <#${channel.id}> emotka: ${emoji} daje rolę: ${role.name}!`);
         } else {
             return message.reply("Za mało argumentów ;v");
         }

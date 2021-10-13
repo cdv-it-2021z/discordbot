@@ -1,4 +1,4 @@
-import { Collection, Message, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 
 import { Event } from "../Interfaces";
 import { registerCommands } from "../functions/registerCommands";
