@@ -57,7 +57,7 @@ class botClient extends Client {
         });
 
         this.reactionListeners = await this.db.listener.findMany() || [];
-        console.info(`Zarejestrowano: ${this.reactionListeners.length} listenerów!`);
+        console.info(`Zarejestrowano: ${this.reactionListeners.length} listenerów!`, this.reactionListeners);
     }
 }
 

@@ -70,7 +70,7 @@ export const command: Command = {
                     emoji,
                     role: role.id
                 }
-            });
+            }); 
 
             client.reactionListeners.push( item );
 
