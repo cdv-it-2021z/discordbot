@@ -138,21 +138,30 @@ export const command: Command = {
             if( !reacted?.count ) 
                 return message.reply("Nie można było zareagować na wiadomość!");
             
-            const item: Listener = {
-                guild: message.guild.id,
-                channel: channel.id,
-                message: msgLink,
-                emoji,
-                role: role.id
-            };
+            const isadded: Listener | null = await client.db.listener.findFirst({
+                where: {
+                    guild: message.guild.id,
+                    channel: channel.id,
+                    emoji,
+                    role: role.id
+                }
+            });
 
-            const isadded = client.reactionListeners.find( listener => listener.message === item.message && listener.emoji === item.emoji );
             if( isadded ) 
-                return message.reply(`Taki listener jest już na tej wiadomości! Daje: ${isadded.role}`);
-            
+                return message.reply(`Jest już taki listener ||id: ${isadded.id}|| !`);
+
+            const item: Listener = await client.db.listener.create({ 
+                data: {
+                    id: client.listeners.length,
+                    guild: message.guild.id,
+                    channel: channel.id,
+                    message: msgLink,
+                    emoji,
+                    role: role.id
+                }
+            });
 
             client.reactionListeners.push( item );
-            client.saveReactListeners();
 
             message.reply(`Zapisano listener na kanale: <#${channel.id}> emotka: ${emoji} daje rolę: ${role.name}!`);
         } else {
@@ -167,7 +176,10 @@ export const command: Command = {
 Wszystkie opcje znajdują się pod wiadomością, w opcji `message.options.data`,  
 pobieramy ich wartości przez wpisanie odpowiendiego gettera np. `message.options.getString("nazwa_opcji")`. Getter jest ściśle powiązany z typem opcji, jaki określony został podczas wpisywania wszystkich opcji.
 
-`FetchChannel as TextChannel` - fetchowanie kanału normalnie zwraca obiekt `Channel`, który składa się na super-kolekcję `TextChannel`, `VoiceChannel` itp. dlatego musimy określić jakiego dokładnie kanału oczekujemy.
+`FetchChannel as TextChannel` - fetchowanie kanału normalnie zwraca obiekt `Channel`, który składa się na super-kolekcję `TextChannel`, `VoiceChannel` itp. dlatego musimy określić jakiego dokładnie kanału oczekujemy.  
+
+Komenda używa też zapisywania do bazy danych za pomocą klienta `@prisma`, który ułatwia sprawdzanie i zapisywanie danych.
+wzór na posługiwanie się klientem wygląda mniej-więcej tak: `client.db.TWÓJMODEL.akcja`. Z uwagi, że klient prismy znajduje się jako zmienna `public readonly db` naszego bota zwracamy się do niego jako `client.db`, później określamy na jakim modelu chcemy działać i na końcu akcję np `.findMany()` czy `.createMany()`.
 
 # Tworzenie eventu
 
