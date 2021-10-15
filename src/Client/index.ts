@@ -3,7 +3,7 @@ import { Command, Event, Listener } from "../Interfaces";
 import { PrismaClient } from "@prisma/client";
 
 import path from "path";
-import { writeFileSync, readdirSync, existsSync, readFileSync } from "fs";
+import { readdirSync } from "fs";
 
 import * as dotenv from "dotenv";
 dotenv.config();

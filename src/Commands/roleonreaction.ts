@@ -64,7 +64,6 @@ export const command: Command = {
 
             const item: Listener = await client.db.listener.create({ 
                 data: {
-                    id: client.listeners.length,
                     guild: message.guild.id,
                     channel: channel.id,
                     message: msgLink,

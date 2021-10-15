@@ -8,7 +8,7 @@ generator client {
 }
 
 model Listener {
-  id  Int @default(autoincrement())  @id
+  id  Int @id @default(autoincrement())
   guild String
   channel String
   message String
