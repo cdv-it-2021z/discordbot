@@ -1,5 +1,6 @@
 import { Client, Collection, Intents, Message, TextChannel } from "discord.js";
 import { Command, Event, Listener } from "../Interfaces";
+import { PrismaClient } from "@prisma/client";
 
 import path from "path";
 import { writeFileSync, readdirSync, existsSync, readFileSync } from "fs";
@@ -16,7 +17,9 @@ class botClient extends Client {
     public Channels: Collection<string, TextChannel> = new Collection();
     public Messages: Collection<string, Message> = new Collection();
 
-    constructor(){
+    public readonly db: PrismaClient = new PrismaClient();
+
+    constructor() {
         super({ intents: [
             Intents.FLAGS.GUILDS,
             Intents.FLAGS.GUILD_MEMBERS,
@@ -53,18 +56,8 @@ class botClient extends Client {
             }
         });
 
-        const filePath = path.resolve(__dirname, "..", "Data", "RoleOnReaction.json");
-        if( existsSync(filePath) ) {
-            const data = readFileSync(filePath, "utf-8");
-            const jsondata: Listener[] = JSON.parse(data);
-            
-            this.reactionListeners = jsondata;
-        }
-    }
-
-    public async saveReactListeners(){
-        const filePath = path.resolve(__dirname, "..", "Data", "RoleOnReaction.json");
-        writeFileSync(filePath, JSON.stringify( this.reactionListeners, null, 2 ));
+        this.reactionListeners = await this.db.listener.findMany() || [];
+        console.info(`Zarejestrowano: ${this.reactionListeners.length} listenerów!`);
     }
 }
 
