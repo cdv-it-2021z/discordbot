@@ -50,21 +50,30 @@ export const command: Command = {
             if( !reacted?.count ) 
                 return message.reply("Nie można było zareagować na wiadomość!");
             
-            const item: Listener = {
-                guild: message.guild.id,
-                channel: channel.id,
-                message: msgLink,
-                emoji,
-                role: role.id
-            };
+            const isadded: Listener | null = await client.db.listener.findFirst({
+                where: {
+                    guild: message.guild.id,
+                    channel: channel.id,
+                    emoji,
+                    role: role.id
+                }
+            });
 
-            const isadded = client.reactionListeners.find( listener => listener.message === item.message && listener.emoji === item.emoji );
             if( isadded ) 
-                return message.reply(`Taki listener jest już na tej wiadomości! Daje: ${isadded.role}`);
-            
+                return message.reply(`Jest już taki listener ||id: ${isadded.id}|| !`);
+
+            const item: Listener = await client.db.listener.create({ 
+                data: {
+                    id: client.listeners.length,
+                    guild: message.guild.id,
+                    channel: channel.id,
+                    message: msgLink,
+                    emoji,
+                    role: role.id
+                }
+            });
 
             client.reactionListeners.push( item );
-            client.saveReactListeners();
 
             message.reply(`Zapisano listener na kanale: <#${channel.id}> emotka: ${emoji} daje rolę: ${role.name}!`);
         } else {
