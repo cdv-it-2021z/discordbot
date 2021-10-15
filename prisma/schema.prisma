@@ -1,0 +1,17 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Listener {
+  id  Int @default(autoincrement())  @id
+  guild String
+  channel String
+  message String
+  emoji String
+  role  String
+}
