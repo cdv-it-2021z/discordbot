@@ -45,7 +45,8 @@ class botClient extends Client {
         });
         console.info(`Zarejestrowano : ${this.commands.size} komend`);
 
-        const eventPath = path.join(__dirname, "..", "Events");
+        // read events
+        const eventPath = path.join( __dirname, "..", "Events" );
         readdirSync(eventPath).forEach( async (file) => {
             const { event } = await import(`${eventPath}/${file}`);
             
@@ -57,7 +58,6 @@ class botClient extends Client {
         });
 
         this.reactionListeners = await this.db.listener.findMany() || [];
-        console.info(`Zarejestrowano: ${this.reactionListeners.length} listenerów!`, this.reactionListeners);
     }
 }
 
