@@ -1,6 +1,12 @@
 # Spis treści
 - [Spis treści](#spis-treści)
 - [Discord bot dla serwera CDV inf zaoczne 2021](#discord-bot-dla-serwera-cdv-inf-zaoczne-2021)
+- [Baza danych i Prisma](#baza-danych-i-prisma)
+  - [Łączenie z bazą danych](#łączenie-z-bazą-danych)
+  - [Tabele w bazie](#tabele-w-bazie)
+  - [Aktualizacja bazy](#aktualizacja-bazy)
+  - [Wyświetlanie bazy](#wyświetlanie-bazy)
+  - [Używanie Prisma w kodzie](#używanie-prisma-w-kodzie)
 - [Tworzenie komendy](#tworzenie-komendy)
   - [Podstawowy Wzór](#podstawowy-wzór)
     - [Przykładowa komenda `/test`:](#przykładowa-komenda-test)
@@ -24,6 +30,68 @@ Osobami odpowiedzialnymi za obsługę i ogół projektu są:
 > Dawid P. - [kvpsky](https://github.com/kvpsky)  
 > Miłosz W. - [Wisienek](https://www.github.com/wisienek/)
 
+
+# Baza danych i Prisma
+
+## Łączenie z bazą danych
+
+Aby połączyć się z bazą danych należy wpisać odpowiednie uri w wartość środowiskową (domyślnie `DATABASE_URL`).  
+Następnie w pliku `prisma.schema` ustalamy jaką dokładnie bazę używamy i podajemy zmienną z uri.  
+[Przykładowe połączenie mysql](https://www.prisma.io/docs/concepts/database-connectors/mysql)
+```s
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+## Tabele w bazie
+
+Aby stworzyć tabelę w bazie i określić jej właściwości używamy modelu, w którym opisujemy każdą kolumnę. Każda tabela musi zawierać co najmniej jedno unikatowe pole ze znacznikiem `@id`.  
+Możliwe jest też podanie domyślnych wartości za pomocą klucza `@default(...)`, unikatowe wartości są oznaczone `@unique` i oczywiście można też używać relacji przy relacyjnych bazach danych za pomocą `@relation(fields: [...], references: [...])`  
+[Więcej przykładów](https://www.prisma.io/docs/concepts/components/prisma-schema#example)
+```s
+model Listener {
+  id  Int @id @default(autoincrement())
+  guild String
+  channel String
+  message String
+  emoji String
+  role  String
+}
+```
+
+## Aktualizacja bazy
+
+Po stworzeniu zmian w pliku `schema.prisma` zawsze generujemy klienta, aby móc używać ich w kodzie: komenda `prisma generate`.  
+Dodatkowo aby zmiany zapisały się w bazie używamy komendy `prisma db push` lub by odebrać zmiany/scheme z bazy: `prisma db pull`.
+
+## Wyświetlanie bazy
+
+Prisma również nam umożliwia podgląd aktualn bazy danych za pomocą webowej aplikacji, którą możemy uruchomić za pomocą komendy: `prisma studio`
+
+## Używanie Prisma w kodzie
+
+Jest to bardzo prosta czynność. Wystarczy odnieść się do klienta Prisma i użyć podanego wzoru: `client.model.czynność({...opcje})`.  
+W tym przypadku klient jest wartością niezmienną naszej instancji bota nazwaną `db`.  
+W przypadku komend możemy wyciągnąć za pomocą destrukturyzacji bota i bez problemu wykonywać polecenia.  
+Przykładowym poleceniem użytym w bocie jest szukanie obiektów `Listener`: 
+```ts
+const foundListener: Listener | null = await client.db.listener.findFirst({
+    where: {
+        guild: message.guild.id,
+        channel: channel.id,
+        emoji,
+        role: role.id
+    }
+});
+```
+[Inne przykłady](https://www.prisma.io/docs/concepts/overview/what-is-prisma#retrieve-all-user-records-from-the-database)
+
+Przy opcjach np. `where` możemy również dodać więcej możliwości niż `coś == coś` jak powyżej.  
+Przykładowo możemy wpisać `emoji: { contains: "🐛 📝" }` co odpowiada SQL: `WHERE emoji LIKE "%🐛 📝%"`.  
+Podobnie mamy query `endsWith` i `startsWith`, tylko one dają `%` na początku lub końcu.  
+Możemy także określić, czy wielkość liter ma być brana pod uwagę dodając `mode: 'insensitive'`, lub posortować wpisując: `orderBy:{title: 'desc'}`.
 
 # Tworzenie komendy
 
