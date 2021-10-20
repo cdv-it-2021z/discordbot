@@ -1,5 +1,5 @@
 import { Permissions, TextChannel } from "discord.js";
-import { Command, Listener } from "../Interfaces";
+import { Command, Listener, OptionType } from "../Interfaces";
 
 export const command: Command = {
     name: "roleonreaction",
@@ -7,25 +7,25 @@ export const command: Command = {
     permission: Permissions.FLAGS.MANAGE_ROLES,
     options: [
         {
-            type: "CHANNEL",
+            type: OptionType.CHANNEL,
             name: "kanał",
             description: "W jakim kanale znajduje się wiadomość (oznacz go)",
             required: true
         },
         {
-            type: "STRING",
+            type: OptionType.STRING,
             name: "msg_id",
             description: "ID wiadomości na jaką podłączyć listener.",
             required: true
         },
         {
-            type: "STRING",
+            type: OptionType.STRING,
             name: "emoji",
             description: "Emoji do nadawania roli",
             required: true
         },
         {
-            type: "ROLE",
+            type: OptionType.ROLE,
             name: "rola",
             description: "Jaką rolę dać po kliknięciu na emotkę",
             required: true

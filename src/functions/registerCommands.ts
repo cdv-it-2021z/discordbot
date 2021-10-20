@@ -11,29 +11,12 @@ const rest = new REST({version: '9'}).setToken(process.env.DISCORD_TOKEN);
 export const registerCommands: (client: botClient, guildIds?: string[]) => void = ( client: botClient, guildIds: string[] ) => {
     const guilds = client.guilds.cache;
     const builtCommands = client.commands.map( (command: Command) => {
-        const cmd = new SlashCommandBuilder()
-                        .setName(command.name)
-                        .setDescription(command?.description)
-                        .setDefaultPermission(false);
-
-        if( command?.options ) {
-            for( const option of command.options ){
-                const { type, name, description, required } = option;
-
-                switch( type ) {
-                    case "BOOLEAN": cmd.addBooleanOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "CHANNEL": cmd.addChannelOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "INTEGER": cmd.addIntegerOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "MENTIONABLE": cmd.addMentionableOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "NUMBER": cmd.addNumberOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "ROLE": cmd.addRoleOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "STRING": cmd.addStringOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    case "USER": cmd.addUserOption(opt=> opt.setName(name).setDescription(description).setRequired(required));break;
-                    default: cmd.addStringOption(opt=> opt.setName(name).setDescription(description).setRequired(required));
-                }
-            }
-        }
-        return cmd.toJSON();
+        return { 
+            name: command.name, 
+            description: command.description, 
+            options: command.options, 
+            default_permission: (command.permission || command.onlyFor) ? false : true,
+        };
     });
 
     for (const gi of guilds) {

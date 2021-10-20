@@ -1,10 +1,21 @@
 import Bot from "../Client";
-import { Message, PermissionResolvable, ApplicationCommandOption, CommandInteraction } from "discord.js";
+import { PermissionResolvable, CommandInteraction, ApplicationCommandOptionChoice } from "discord.js";
+import { OptionType } from './OptionType';
+import { ChannelType } from "discord-api-types";
 
 type args = {
     client: Bot;
     message: CommandInteraction;
     args?: string[];
+}
+type CommandOption = {
+    type: OptionType;
+    description: string;
+    name: string;
+    required: boolean;
+    choices?: ApplicationCommandOptionChoice[];
+    options?: CommandOption[];
+    channelTypes?: ChannelType[];
 }
 
 interface Run {
@@ -15,8 +26,9 @@ export interface Command {
     id?: string;
     name: string;
     description: string;
-    options?: ApplicationCommandOption[];
+    options?: CommandOption[];
     aliases?: string[];
-    permission: PermissionResolvable
+    permission?: PermissionResolvable
+    onlyFor?: string[]
     run: Run;
 }
