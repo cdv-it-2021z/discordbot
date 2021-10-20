@@ -5,7 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "test": "jest",
-    "start": "npx prisma generate & ts-node ./src/index.ts",
+    "start": "npx prisma generate && npx prisma push && ts-node ./src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only --poll ./src/index.ts"
   },
   "repository": {
